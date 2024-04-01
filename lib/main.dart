@@ -8,6 +8,7 @@ import 'package:text_vagon/app/constant/app_string.dart';
 import 'package:text_vagon/app/local_db/getstorage_manager.dart';
 import 'package:text_vagon/ui/components/bottom_bar/childrens/theme_widget/provider/theme_provider.dart';
 import 'package:text_vagon/ui/screen/home/view/home_view.dart';
+import 'package:window_manager/window_manager.dart';
 
 Future<void> main() async {
   await GetStorageManager.init();
@@ -15,6 +16,20 @@ Future<void> main() async {
   await Window.makeTitlebarTransparent();
   await Window.enableFullSizeContentView();
   await Window.hideTitle();
+  await windowManager.ensureInitialized();
+
+  WindowOptions windowOptions = const WindowOptions(
+    size: Size(1000, 700),
+    minimumSize: Size(600, 400),
+    center: true,
+    backgroundColor: Colors.transparent,
+    skipTaskbar: false,
+    titleBarStyle: TitleBarStyle.hidden,
+  );
+  windowManager.waitUntilReadyToShow(windowOptions, () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
   runApp(const ProviderScope(child: TextVagonApp()));
 }
 

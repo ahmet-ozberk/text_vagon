@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:io';
 
+import 'package:text_vagon/app/constant/app_string.dart';
+
 
 final fileSaveProvider = ChangeNotifierProvider((ref) => FileSaveProvider());
 
@@ -14,7 +16,7 @@ class FileSaveProvider extends ChangeNotifier {
   Future<bool> saveFile(String data) async {
     try {
       String? outputFile = await FilePicker.platform.saveFile(
-        dialogTitle: 'Dosyayı Kaydet',
+        dialogTitle: AppString.saveFile,
         type: FileType.custom,
         fileName: "${fileNameController.text}.md",
         allowedExtensions: ['md'],

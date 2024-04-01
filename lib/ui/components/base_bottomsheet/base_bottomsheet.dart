@@ -17,9 +17,11 @@ class BaseBottomSheet extends StatelessWidget {
             color: context.isDarkTheme ? Colors.black54 : Colors.white,
             borderRadius: 12.borderRadius,
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: children,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: children,
+            ),
           ),
         ),
       ),

@@ -12,22 +12,46 @@ class ThemeProvider extends ChangeNotifier {
       ? ThemeMode.system
       : ThemeMode.values[GetStorageManager.read<int>('themeMode')!];
 
+  String? get activeEffect =>
+      GetStorageManager.read<String>('WindowEffect') ?? WindowEffect.mica.name;
+
   void setThemeMode(ThemeMode themeMode) {
     GetStorageManager.write('themeMode', themeMode.index);
     windowEffect();
     notifyListeners();
   }
 
-  void windowEffect() async {
+  void windowEffect({WindowEffect? effect}) async {
     final isDarkTheme = themeMode == ThemeMode.system
         ? PlatformDispatcher.instance.platformBrightness == Brightness.dark
         : themeMode == ThemeMode.dark;
 
     await Window.setEffect(
-      effect: WindowEffect.mica,
+      effect: activeEffect.windowEffect,
       dark: isDarkTheme,
     );
+
     await Window.overrideMacOSBrightness(dark: isDarkTheme);
-   
+  }
+
+  void setNewEffect(WindowEffect effect) async {
+    final isDarkTheme = themeMode == ThemeMode.system
+        ? PlatformDispatcher.instance.platformBrightness == Brightness.dark
+        : themeMode == ThemeMode.dark;
+    await GetStorageManager.write("WindowEffect", effect.name);
+    await Window.setEffect(
+      effect: effect,
+      dark: isDarkTheme,
+    );
+    notifyListeners();
+  }
+}
+
+extension WindowEffectExtension on String? {
+  WindowEffect get windowEffect {
+    final list = WindowEffect.values
+        .where((element) => element.name.toLowerCase() == this?.toLowerCase())
+        .toList();
+    return list.isEmpty ? WindowEffect.mica : list.first;
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grock/grock.dart';
+import 'package:text_vagon/app/constant/app_string.dart';
 import 'package:text_vagon/ui/screen/home/provider/home_provider.dart';
 
 class MarkdownEditView extends ConsumerStatefulWidget {
@@ -38,7 +39,7 @@ class _MarkdownEditViewState extends ConsumerState<MarkdownEditView> {
           width: double.infinity,
           alignment: Alignment.topRight,
           child: Text(
-            "Kelime: ${watch.markdownData.split(" ").length}, Karakter: ${watch.markdownData.length}, Satır: ${watch.cursorLocation}, Sütun: ${watch.markdownController.selection.baseOffset}",
+            "${AppString.word}: ${watch.markdownData.split(" ").length}, ${AppString.character}: ${watch.markdownData.length}, ${AppString.line}: ${watch.cursorLocation}, ${AppString.column}: ${watch.markdownController.selection.baseOffset}",
             style: context.labelSmall.copyWith(fontWeight: FontWeight.w200),
           ),
         ),
@@ -96,7 +97,7 @@ class _MarkdownEditViewState extends ConsumerState<MarkdownEditView> {
                   decoration: InputDecoration(
                     contentPadding: 8.padding,
                     border: InputBorder.none,
-                    hintText: '# Enter Markdown',
+                    hintText: '# ${AppString.markdownHintText}',
                   ),
                 ),
               ),

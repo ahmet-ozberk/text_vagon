@@ -7,7 +7,7 @@ extension FabExtension on FloatingActionButton {
         data: ThemeData(
           floatingActionButtonTheme: FloatingActionButtonThemeData(
             elevation: 0,
-            backgroundColor: Colors.grey.shade400,
+            backgroundColor: Colors.grey.shade200,
             shape: RoundedRectangleBorder(
               borderRadius:
                   MarkdownViewConstant.buttonChildrenBorderRadius.borderRadius,

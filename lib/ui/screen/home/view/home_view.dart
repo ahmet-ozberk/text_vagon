@@ -25,9 +25,6 @@ class HomeView extends ConsumerWidget {
             : CrossFadeState.showSecond,
         duration: 400.milliseconds,
       ),
-      // watch.isVerticalMarkdown
-      //     ? const VerticalMarkdown()
-      //     : const HorizontalMarkdown(),
     );
   }
 }

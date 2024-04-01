@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_acrylic/flutter_acrylic.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grock/grock.dart';
 import 'package:text_vagon/app/constant/markdown_view_constant.dart';
@@ -67,6 +68,41 @@ class ScreenThemeWidget extends ConsumerWidget {
               if (value) {
                 read.setThemeMode(ThemeMode.system);
               }
+            },
+          ),
+        ),
+        const Divider(),
+        const Text("Pencere Efekti", style: TextStyle(color: Colors.blueGrey)).align(align: Alignment.centerLeft).paddingHorizontal(16),
+        SizedBox(
+          height: 56,
+          child: ListView.separated(
+            scrollDirection: Axis.horizontal,
+            shrinkWrap: true,
+            padding: 8.padding,
+            itemCount: WindowEffect.values.length,
+            separatorBuilder: (context, index) => const SizedBox(width: 8),
+            itemBuilder: (context, index) {
+              final effect = WindowEffect.values[index];
+              final isActive = watch.activeEffect == effect.name;
+              return InkWell(
+                onTap: () {
+                  read.setNewEffect(effect);
+                },
+                child: Container(
+                  height: 56,
+                  padding: 12.paddingHorizontal,
+                  decoration: BoxDecoration(
+                    color: Colors.blueGrey.withOpacity(isActive ? 0.9 : 0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Center(
+                    child: Text(
+                      effect.toString().split('.').last,
+                      style: context.bodyMedium.copyWith(color: isActive ? Colors.white : Colors.blueGrey),
+                    ),
+                  ),
+                ),
+              );
             },
           ),
         ),

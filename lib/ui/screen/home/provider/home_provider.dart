@@ -1,13 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:text_vagon/app/constant/app_string.dart';
 import 'package:text_vagon/app/enum/markdown_view_enum.dart';
 import 'package:text_vagon/ui/screen/home/model/markdown_layout_model.dart';
 
 final homeProvider = ChangeNotifierProvider((ref) => HomeProvider());
 
 class HomeProvider extends ChangeNotifier {
-  String _markdownData = '''# Enter Markdown ''';
+  String _markdownData = '''# ${AppString.markdownHintText} ''';
   MarkdownLayoutModel _markdownLayoutModel = MarkdownLayoutModel();
   MarkdownLocation _markdownLocation = MarkdownLocation.leftToRight;
   final _markdownController = TextEditingController();
