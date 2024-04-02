@@ -9,7 +9,6 @@ final class MarkdownPatterns {
   double get newSize => GetStorageManager.read<double?>("fontSize") ?? 0;
 
   Map<String, TextStyle> get patternMap {
-    print("newSize: $newSize");
     return {
       r'#.*': TextStyle(
           fontWeight: FontWeight.bold,
