@@ -14,7 +14,7 @@ class BaseBottomSheet extends StatelessWidget {
       child: MinScaleAnimation(
         child: Container(
           decoration: BoxDecoration(
-            color: context.isDarkTheme ? Colors.black54 : Colors.white,
+            color: context.isDarkTheme ? Colors.grey.shade900 : Colors.white,
             borderRadius: 12.borderRadius,
           ),
           child: SingleChildScrollView(

@@ -1,9 +1,17 @@
+// ignore_for_file: depend_on_referenced_packages
+
+import 'package:code_text_field/code_text_field.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:grock/grock.dart';
 import 'package:text_vagon/app/constant/app_string.dart';
+import 'package:text_vagon/app/constant/markdown_view_constant.dart';
 import 'package:text_vagon/app/enum/markdown_view_enum.dart';
+import 'package:text_vagon/app/local_db/getstorage_manager.dart';
+import 'package:text_vagon/ui/components/markdown/markdown_patterns.dart';
 import 'package:text_vagon/ui/screen/home/model/markdown_layout_model.dart';
+import 'package:highlight/languages/dart.dart';
 
 final homeProvider = ChangeNotifierProvider((ref) => HomeProvider());
 
@@ -11,7 +19,12 @@ class HomeProvider extends ChangeNotifier {
   String _markdownData = '''# ${AppString.markdownHintText} ''';
   MarkdownLayoutModel _markdownLayoutModel = MarkdownLayoutModel();
   MarkdownLocation _markdownLocation = MarkdownLocation.leftToRight;
-  final _markdownController = TextEditingController();
+  final CodeController _markdownController = CodeController(
+      text: MarkdownViewConstant.defaultText,
+      language: dart,
+      patternMap: MarkdownPatterns.instance.patternMap,
+      stringMap: MarkdownPatterns.instance.stringMap,
+      params: const EditorParams(tabSpaces: 4));
   final _markdownFocusNode = FocusNode();
   final lineScrollController = ScrollController();
   final markdownScrollController = ScrollController();
@@ -24,7 +37,7 @@ class HomeProvider extends ChangeNotifier {
 
   MarkdownLocation get markdownLocation => _markdownLocation;
   MarkdownLayoutModel get markdownLayoutModel => _markdownLayoutModel;
-  TextEditingController get markdownController => _markdownController;
+  CodeController get markdownController => _markdownController;
   FocusNode get markdownFocusNode => _markdownFocusNode;
   int get markdownLineCount => rowCount;
   String get markdownData => _markdownData;
@@ -32,6 +45,9 @@ class HomeProvider extends ChangeNotifier {
   int get horizontalResultFlex => _horizontalResultFlex;
   int get verticalEditorFlex => _verticalEditorFlex;
   int get verticalResultFlex => _verticalResultFlex;
+  double? localFontSize = GetStorageManager.read<double?>("fontSize");
+
+  double get appFontSize => 16 + (localFontSize ?? 0);
 
   int get cursorLocation {
     return _calculateLineNumber(_markdownController.selection.baseOffset < 0
@@ -82,6 +98,47 @@ class HomeProvider extends ChangeNotifier {
     });
   }
 
+  void incrementFontSize() {
+    if (localFontSize != null) {
+      if (localFontSize! < 25) {
+        localFontSize = localFontSize! + 1;
+        GetStorageManager.write("fontSize", localFontSize);
+        // _markdownController.copyWith(
+        //   patternMap: MarkdownPatterns.instance.patternMap,
+        // );
+        Grock.toast(
+            text: "Font size: ${appFontSize.toInt()}",
+            duration: 700.milliseconds,
+            openDuration: 200.milliseconds,
+            backgroundColor: Colors.grey.shade300,
+            textColor: Colors.black);
+        notifyListeners();
+      }
+    }
+  }
+
+  void decrementFontSize() {
+    if (localFontSize != null) {
+      if (localFontSize! > -9) {
+        localFontSize = localFontSize! - 1;
+        GetStorageManager.write("fontSize", localFontSize);
+        // setMarkdownController = CodeController(
+        //     text: MarkdownViewConstant.defaultText,
+        //     language: dart,
+        //     patternMap: MarkdownPatterns.instance.patternMap,
+        //     stringMap: MarkdownPatterns.instance.stringMap,
+        //     params: const EditorParams(tabSpaces: 4));
+        Grock.toast(
+            text: "Font size: ${appFontSize.toInt()}",
+            duration: 700.milliseconds,
+            openDuration: 200.milliseconds,
+            backgroundColor: Colors.grey.shade300,
+            textColor: Colors.black);
+        notifyListeners();
+      }
+    }
+  }
+
   int _calculateLineNumber(int cursorPosition) {
     try {
       if (cursorPosition < 0) {
@@ -98,6 +155,9 @@ class HomeProvider extends ChangeNotifier {
   }
 
   void init() {
+    if (GetStorageManager.read<double?>("fontSize") == null) {
+      GetStorageManager.write("fontSize", 0);
+    }
     listenerMarkdownText();
     markdownScrollController.addListener(() {
       lineScrollController.jumpTo(markdownScrollController.offset);

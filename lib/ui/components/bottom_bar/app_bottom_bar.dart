@@ -19,8 +19,7 @@ class AppBottomBar extends ConsumerWidget {
       key: MarkdownViewConstant.expandableFabKey,
       type: ExpandableFabType.side,
       distance: 70,
-      overlayStyle: ExpandableFabOverlayStyle(
-          blur: MarkdownViewConstant.bottomOverlayBLur),
+      overlayStyle: ExpandableFabOverlayStyle(blur: 0),
       openButtonBuilder: FloatingActionButtonBuilder(
         size: MarkdownViewConstant.fabDefaultSize,
         builder: (context, onPressed, progress) {

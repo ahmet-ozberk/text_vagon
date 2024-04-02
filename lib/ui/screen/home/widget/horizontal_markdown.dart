@@ -1,7 +1,4 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:grock/grock.dart';
 import 'package:text_vagon/app/enum/markdown_view_enum.dart';
@@ -17,6 +14,7 @@ class HorizontalMarkdown extends ConsumerStatefulWidget {
 }
 
 class _HorizontalMarkdownState extends ConsumerState<HorizontalMarkdown> {
+
   @override
   Widget build(BuildContext context) {
     final watch = ref.watch(homeProvider);
@@ -42,7 +40,11 @@ class _HorizontalMarkdownState extends ConsumerState<HorizontalMarkdown> {
             child: const MarkdownEditView(),
           ),
         ],
-      ].seperatedWidget((context, index) => VerticalDivider(width: 0,color: context.isDarkTheme ? Colors.grey.shade800.withOpacity(0.4) : Colors.black12)),
+      ].seperatedWidget((context, index) => VerticalDivider(
+          width: 0,
+          color: context.isDarkTheme
+              ? Colors.grey.shade800.withOpacity(0.4)
+              : Colors.black12)),
     );
   }
 }
