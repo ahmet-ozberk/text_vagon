@@ -3,11 +3,10 @@
 import 'package:code_text_field/code_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:grock/grock.dart';
 import 'package:text_vagon/app/constant/app_string.dart';
 import 'package:text_vagon/app/constant/markdown_view_constant.dart';
 import 'package:text_vagon/app/enum/markdown_view_enum.dart';
-import 'package:text_vagon/app/local_db/getstorage_manager.dart';
+import 'package:text_vagon/app/enum/view_enum.dart';
 import 'package:text_vagon/ui/components/markdown/markdown_patterns.dart';
 import 'package:text_vagon/ui/screen/home/model/markdown_layout_model.dart';
 import 'package:highlight/languages/dart.dart';
@@ -16,8 +15,10 @@ final homeProvider = ChangeNotifierProvider((ref) => HomeProvider());
 
 class HomeProvider extends ChangeNotifier {
   String _markdownData = '''# ${AppString.markdownHintText} ''';
+  ViewEnum _viewEnum = ViewEnum.code;
   MarkdownLayoutModel _markdownLayoutModel = MarkdownLayoutModel();
   MarkdownLocation _markdownLocation = MarkdownLocation.leftToRight;
+  //double? localFontSize = GetStorageManager.read<double?>("fontSize");
   final CodeController _markdownController = CodeController(
       text: MarkdownViewConstant.defaultText,
       language: dart,
@@ -44,14 +45,21 @@ class HomeProvider extends ChangeNotifier {
   int get horizontalResultFlex => _horizontalResultFlex;
   int get verticalEditorFlex => _verticalEditorFlex;
   int get verticalResultFlex => _verticalResultFlex;
-  double? localFontSize = GetStorageManager.read<double?>("fontSize");
+  ViewEnum get viewEnum => _viewEnum;
 
-  double get appFontSize => 16 + (localFontSize ?? 0);
+
+  // double get appFontSize => localFontSize ?? 16;
+
+  double get appFontSize => 16;
 
   int get cursorLocation {
-    return _calculateLineNumber(_markdownController.selection.baseOffset < 0
-        ? 0
-        : _markdownController.selection.baseOffset);
+    final baseOffset = _markdownController.selection.baseOffset;
+    return _calculateLineNumber(baseOffset < 0 ? 0 : baseOffset);
+  }
+
+    set setViewEnum(ViewEnum viewEnum) {
+    _viewEnum = viewEnum;
+    notifyListeners();
   }
 
   set setHorizontalEditorFlex(int horizontalEditorFlex) {
@@ -97,45 +105,11 @@ class HomeProvider extends ChangeNotifier {
     });
   }
 
-  void incrementFontSize() {
-    if (localFontSize != null) {
-      if (localFontSize! < 25) {
-        localFontSize = localFontSize! + 1;
-        GetStorageManager.write("fontSize", localFontSize);
-        // _markdownController.copyWith(
-        //   patternMap: MarkdownPatterns.instance.patternMap,
-        // );
-        Grock.toast(
-            text: "${appFontSize.toInt()}",
-            duration: 700.milliseconds,
-            openDuration: 200.milliseconds,
-            backgroundColor: Colors.grey.shade300,
-            textColor: Colors.black);
-        notifyListeners();
-      }
-    }
-  }
-
-  void decrementFontSize() {
-    if (localFontSize != null) {
-      if (localFontSize! > -9) {
-        localFontSize = localFontSize! - 1;
-        GetStorageManager.write("fontSize", localFontSize);
-        // setMarkdownController = CodeController(
-        //     text: MarkdownViewConstant.defaultText,
-        //     language: dart,
-        //     patternMap: MarkdownPatterns.instance.patternMap,
-        //     stringMap: MarkdownPatterns.instance.stringMap,
-        //     params: const EditorParams(tabSpaces: 4));
-        Grock.toast(
-            text: "${appFontSize.toInt()}",
-            duration: 700.milliseconds,
-            openDuration: 200.milliseconds,
-            backgroundColor: Colors.grey.shade300,
-            textColor: Colors.black);
-        notifyListeners();
-      }
-    }
+  void init() {
+    listenerMarkdownText();
+    markdownScrollController.addListener(() {
+      lineScrollController.jumpTo(markdownScrollController.offset);
+    });
   }
 
   int _calculateLineNumber(int cursorPosition) {
@@ -153,61 +127,42 @@ class HomeProvider extends ChangeNotifier {
     }
   }
 
-  void init() {
-    if (GetStorageManager.read<double?>("fontSize") == null) {
-      GetStorageManager.write("fontSize", 0);
-    }
-    listenerMarkdownText();
-    markdownScrollController.addListener(() {
-      lineScrollController.jumpTo(markdownScrollController.offset);
-    });
-  }
-
   bool get isVerticalMarkdown =>
       _markdownLocation == MarkdownLocation.topToBottom ||
       _markdownLocation == MarkdownLocation.bottomToTop;
-
-  void onHorizontalDragUpdate(DragUpdateDetails details) {
-    final newWidth = _markdownLayoutModel.width! + details.delta.dx;
-
-    if (_markdownLocation == MarkdownLocation.leftToRight) {
-      if (newWidth > 0) {
-        _markdownLayoutModel = _markdownLayoutModel.copyWith(
-          width: newWidth,
-        );
-        notifyListeners();
-      }
-    } else {
-      final newWidth = _markdownLayoutModel.width! - details.delta.dx;
-
-      if (newWidth > 0) {
-        _markdownLayoutModel = _markdownLayoutModel.copyWith(
-          width: newWidth,
-        );
-        notifyListeners();
-      }
-    }
-  }
-
-  void onVerticalDragUpdate(DragUpdateDetails details) {
-    final newHeight = _markdownLayoutModel.height! + details.delta.dy;
-
-    if (_markdownLocation == MarkdownLocation.topToBottom) {
-      if (newHeight > 0) {
-        _markdownLayoutModel = _markdownLayoutModel.copyWith(
-          height: newHeight,
-        );
-        notifyListeners();
-      }
-    } else {
-      final newHeight = _markdownLayoutModel.height! - details.delta.dy;
-
-      if (newHeight > 0) {
-        _markdownLayoutModel = _markdownLayoutModel.copyWith(
-          height: newHeight,
-        );
-        notifyListeners();
-      }
-    }
-  }
 }
+
+
+
+  // void incrementFontSize() {
+  //   if (localFontSize != null) {
+  //     if (localFontSize! < 24) {
+  //       localFontSize = localFontSize! + 1;
+  //       settingsFontSize();
+  //     }
+  //   }
+  // }
+
+  // void decrementFontSize() {
+  //   if (localFontSize != null) {
+  //     if (localFontSize! > -8) {
+  //       localFontSize = localFontSize! - 1;
+  //       settingsFontSize();
+  //     }
+  //   }
+  // }
+
+  // void settingsFontSize() {
+  //   GetStorageManager.write("fontSize", localFontSize);
+  //   _markdownController.copyWith(
+  //     patternMap: MarkdownPatterns.instance.patternMap,
+  //     stringMap: MarkdownPatterns.instance.stringMap,
+  //   );
+  //   Grock.toast(
+  //       text: "${appFontSize.toInt()}",
+  //       duration: 700.milliseconds,
+  //       openDuration: 200.milliseconds,
+  //       backgroundColor: Colors.grey.shade300,
+  //       textColor: Colors.black);
+  //   notifyListeners();
+  // }

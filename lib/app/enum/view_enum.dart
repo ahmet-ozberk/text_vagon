@@ -1,0 +1,4 @@
+enum ViewEnum {
+  markdown,
+  code,
+}

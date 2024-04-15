@@ -6,7 +6,7 @@ extension FabExtension on FloatingActionButton {
   Widget get custom => Theme(
         data: ThemeData(
           floatingActionButtonTheme: FloatingActionButtonThemeData(
-            elevation: 0,
+            elevation: 10,
             backgroundColor: Colors.grey.shade200,
             shape: RoundedRectangleBorder(
               borderRadius:

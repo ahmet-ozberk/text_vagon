@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:io';
 
 import 'package:text_vagon/app/constant/app_string.dart';
+import 'package:text_vagon/app/enum/view_enum.dart';
+import 'package:text_vagon/ui/screen/home/provider/home_provider.dart';
 
 
 final fileSaveProvider = ChangeNotifierProvider((ref) => FileSaveProvider());
@@ -14,12 +16,14 @@ class FileSaveProvider extends ChangeNotifier {
   final fileNameController = TextEditingController();
 
   Future<bool> saveFile(String data) async {
+    final container = ProviderContainer();
+    final mode = container.read(homeProvider).viewEnum;
     try {
       String? outputFile = await FilePicker.platform.saveFile(
         dialogTitle: AppString.saveFile,
         type: FileType.custom,
-        fileName: "${fileNameController.text}.md",
-        allowedExtensions: ['md'],
+        fileName: "${fileNameController.text}.${mode == ViewEnum.markdown ? 'md' : 'dart'}",
+        allowedExtensions: [mode == ViewEnum.markdown ? 'md' :'dart'],
       );
       if (outputFile == null) {
         return false;

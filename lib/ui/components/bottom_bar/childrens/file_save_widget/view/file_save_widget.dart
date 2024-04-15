@@ -49,7 +49,7 @@ class FileSaveWidget extends ConsumerWidget {
         24.height,
         CupertinoButton.filled(
           child: const Text(AppString.save),
-          onPressed: () => fileSaveRead.saveFile(homeWatch.markdownData),
+          onPressed: () => fileSaveRead.saveFile(homeWatch.markdownData).then((value) => Grock.back()),
         ).disableMaterial3.size(width: double.infinity).paddingHorizontal(24),
         24.height,
         CupertinoButton.filled(
