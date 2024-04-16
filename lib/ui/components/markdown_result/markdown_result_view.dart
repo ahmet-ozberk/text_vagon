@@ -1,9 +1,10 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grock/grock.dart';
-// ignore: depend_on_referenced_packages
 import 'package:markdown/markdown.dart' as md;
 import 'package:markdown_widget/config/all.dart';
 import 'package:markdown_widget/widget/all.dart';

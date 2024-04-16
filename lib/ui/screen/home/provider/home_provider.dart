@@ -4,7 +4,6 @@ import 'package:code_text_field/code_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:text_vagon/app/constant/app_string.dart';
-import 'package:text_vagon/app/constant/markdown_view_constant.dart';
 import 'package:text_vagon/app/enum/markdown_view_enum.dart';
 import 'package:text_vagon/app/enum/view_enum.dart';
 import 'package:text_vagon/ui/components/markdown/markdown_patterns.dart';
@@ -15,12 +14,11 @@ final homeProvider = ChangeNotifierProvider((ref) => HomeProvider());
 
 class HomeProvider extends ChangeNotifier {
   String _markdownData = '''# ${AppString.markdownHintText} ''';
-  ViewEnum _viewEnum = ViewEnum.code;
+  ViewEnum _viewEnum = ViewEnum.markdown;
   MarkdownLayoutModel _markdownLayoutModel = MarkdownLayoutModel();
   MarkdownLocation _markdownLocation = MarkdownLocation.leftToRight;
   //double? localFontSize = GetStorageManager.read<double?>("fontSize");
   final CodeController _markdownController = CodeController(
-      text: MarkdownViewConstant.defaultText,
       language: dart,
       patternMap: MarkdownPatterns.instance.patternMap,
       stringMap: MarkdownPatterns.instance.stringMap,
@@ -47,7 +45,6 @@ class HomeProvider extends ChangeNotifier {
   int get verticalResultFlex => _verticalResultFlex;
   ViewEnum get viewEnum => _viewEnum;
 
-
   // double get appFontSize => localFontSize ?? 16;
 
   double get appFontSize => 16;
@@ -57,7 +54,7 @@ class HomeProvider extends ChangeNotifier {
     return _calculateLineNumber(baseOffset < 0 ? 0 : baseOffset);
   }
 
-    set setViewEnum(ViewEnum viewEnum) {
+  set setViewEnum(ViewEnum viewEnum) {
     _viewEnum = viewEnum;
     notifyListeners();
   }

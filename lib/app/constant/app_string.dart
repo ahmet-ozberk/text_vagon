@@ -11,6 +11,7 @@ final class AppString {
   static const String column = "Sütun";
   static const String openOrSave = "Aç veya Kaydet";
   static const String screenLayout = "Ekran Yerleşimi";
+  static const String viewMode = "Ekran Modu";
   static const String appTheme = "Uygulama Teması";
   static const String settings = "Ayarlar";
   static const String saveFile = "Dosyayı Kaydet";
@@ -21,4 +22,6 @@ final class AppString {
   static const String error = "Hata";
   static const String fileCouldNotBeOpened = "Dosya Açılamadı";
   static const String ok = "Tamam";
+  static const String code = "Kod";
+  static const String markdown = "Markdown";
 }

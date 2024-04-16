@@ -9,6 +9,7 @@ import 'package:text_vagon/app/extension/widget_extension.dart';
 import 'package:text_vagon/ui/components/bottom_bar/childrens/file_save_widget/view/file_save_widget.dart';
 import 'package:text_vagon/ui/components/bottom_bar/childrens/layout_widget/view/screen_layout_widget.dart';
 import 'package:text_vagon/ui/components/bottom_bar/childrens/theme_widget/view/screen_theme_widget.dart';
+import 'package:text_vagon/ui/components/bottom_bar/childrens/view_mode/view/view_mode.dart';
 
 class AppBottomBar extends ConsumerWidget {
   const AppBottomBar({super.key});
@@ -50,6 +51,11 @@ class AppBottomBar extends ConsumerWidget {
           onPressed: () => ScreenLayoutWidget.show(),
           tooltip: AppString.screenLayout,
           child: const Icon(Icons.width_normal_rounded),
+        ).custom,
+        FloatingActionButton(
+          onPressed: () => ViewModeWidget.show(),
+          tooltip: AppString.viewMode,
+          child: const Icon(Icons.code_rounded),
         ).custom,
         FloatingActionButton(
           onPressed: () => ScreenThemeWidget.show(),
